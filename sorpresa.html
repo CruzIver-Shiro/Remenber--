@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Navidad Realista</title>
+
+<style>
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+  height:100vh;
+  background: radial-gradient(circle at bottom, #021, #000);
+  overflow:hidden;
+  font-family: 'Segoe UI', sans-serif;
+  justify-content: center;
+
+  display:flex;
+}
+
+/* 🌫️ Niebla */
+.fog{
+  position:absolute;
+  width:200%;
+  height:200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.05), transparent 60%);
+  animation: fogMove 40s linear infinite;
+  filter: blur(60px);
+}
+
+@keyframes fogMove{
+  from{transform: translateX(-30%)}
+  to{transform: translateX(30%)}
+}
+
+/* ❄️ Nieve */
+.snow{
+  position:absolute;
+  top:-20px;
+  color:white;
+  opacity:0.8;
+  animation: fall linear infinite;
+}
+
+@keyframes fall{
+  to{
+    transform: translateY(110vh);
+  }
+}
+
+/* 🌲 Escenario */
+.scene{
+  position:absolute;
+  bottom:0;
+  width:100%;
+  display:flex;
+  justify-content:center;
+}
+
+/* 🎄 Árbol realista */
+.tree{
+  position:relative;
+  width:300px;
+  height:420px;
+}
+
+/* Capas curvas */
+.branch{
+  position:absolute;
+  left:50%;
+  transform: translateX(-50%);
+  width:260px;
+  height:120px;
+  background: radial-gradient(circle at bottom, #0d6b3f, #043);
+  border-radius:140px 140px 0 0;
+  box-shadow: inset 0 15px 20px rgba(0,0,0,0.4);
+}
+
+.branch.b1{ top:50px; width:120px;}
+.branch.b2{ top:120px; width:180px;}
+.branch.b3{ top:190px; width:240px;}
+.branch.b4{ top:250px; width:300px;}
+
+/* ⭐ Estrella */
+.star{
+  position:absolute;
+  top:0;
+  left:50%;
+  transform:translateX(-50%);
+  font-size:45px;
+  color:gold;
+  text-shadow:0 0 20px gold;
+}
+
+/* 🌲 Tronco */
+.trunk{
+  position:absolute;
+  bottom:0;
+  left:50%;
+  transform:translateX(-50%);
+  width:60px;
+  height:90px;
+  background: linear-gradient(#5a2d0c, #3a1b05);
+  border-radius:8px;
+}
+
+/* 💡 Luces */
+.light{
+  position:absolute;
+  width:10px;
+  height:10px;
+  border-radius:50%;
+  animation: blink 2s infinite alternate;
+}
+
+@keyframes blink{
+  from{opacity:0.3}
+  to{opacity:1}
+}
+
+/* 🎁 Regalos */
+.gifts{
+  position:absolute;
+  bottom:-10px;
+  display:flex;
+  gap:25px;
+}
+
+.gift{
+  width:50px;
+  height:50px;
+  background: crimson;
+  position:relative;
+  box-shadow:0 10px 20px rgba(0,0,0,0.6);
+}
+
+.gift::before{
+  content:"";
+  position:absolute;
+  width:8px;
+  height:100%;
+  background:gold;
+  left:50%;
+  transform:translateX(-50%);
+}
+
+/* 🎁 Regalo especial */
+.special{
+  width:70px;
+  height:70px;
+  background:gold;
+  border:4px solid crimson;
+  cursor:pointer;
+  animation:pulse 1.5s infinite;
+}
+
+@keyframes pulse{
+  50%{transform:scale(1.1)}
+}
+
+
+
+.boton{
+            
+            border-radius: 10px;
+            width: 350px;
+            height: 70px;
+            padding:2px;
+            margin-top: 30px;
+            border:none;
+            z-index: 1000;
+            
+}
+        .carta{
+            border:1px solid black;
+            padding: 2px;
+            height: auto;
+            width:400px;
+            background-color: bisque;
+            display:none;
+            position:fixed;
+            top:50%;
+            left:50%;
+            transform: translate(-50%,-50%);
+            border-radius: 20px;
+            text-align: center;
+            z-index: 1000;
+        }
+        .ovelay{
+    position: fixed;
+    top:0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.6);
+    display:none;
+    z-index: 999;
+        }
+        #cerrar{
+    padding: 8xp 15px;
+    border-radius: 8px;
+    cursor:pointer;
+    margin-top:10px;
+    background-color: red;
+        }
+</style>
+</head>
+
+<body>
+
+  <div class="audio">
+        <audio id="audios" autoplay loop >
+        <source src="navid.mpeg">
+    </audio>
+</div>
+
+  <button class="boton"><h1>👉✉📩Open📩✉👈</h1></button>
+   <div id="cartaMensaje" class="carta">
+  
+    <h2>🎄 Feliz Navidad Melu🎁</h2>
+    <p>Queria desearte una Navidad llena de alegrias y paz 
+        junto a tus seres queridos.🎀</p>
+       <br>
+    <p>Espero que este nuevo año te traiga muchas bendiciones,
+        sonrisas y todo lo que te propongas.✨</p>
+         <br>
+    <p>Te quiero un monton y te deseo lo mejor.
+        ¡¡Que la magia de la navidad te acompañe siempre.🎄</p>
+    
+<button id="cerrar"><h2>👉🚪</h2></button>
+</div>
+</div>
+
+<div id="ovelay" class="ovelay"></div>
+<script>
+
+       const boton=document.querySelector('.boton');
+       const carta=document.getElementById('cartaMensaje');
+       const ovelay=document.getElementById('ovelay');
+       const cerrar=document.getElementById('cerrar')
+       boton.addEventListener('click',()=>{carta.style.display='block';ovelay.style.display='block'});
+       cerrar.addEventListener('click',()=>{carta.style.display='none';ovelay.style.display='none';});
+       </script>
+       
+
+<!-- 🌫️ Niebla -->
+<div class="fog"></div>
+<div class="fog"></div>
+
+<!-- ❄️ Nieve -->
+<script>
+for(let i=0;i<200;i++){
+  let s=document.createElement("div");
+  s.className="snow";
+  s.innerHTML="<h2>❄</h2>";
+  s.style.left=Math.random()*100+"vw";
+  s.style.fontSize=(6+Math.random()*14)+"px";
+  s.style.animationDuration=(6+Math.random()*6)+"s";
+  document.body.appendChild(s);
+}
+</script>
+
+<!-- 🎄 Escena -->
+<div class="scene">
+  <div class="tree">
+    <div class="star">⭐</div>
+
+    <div class="branch b4"></div>
+    <div class="branch b3"></div>
+    <div class="branch b2"></div>
+    <div class="branch b1"></div>
+
+    <div class="trunk"></div>
+
+    <!-- 💡 Luces -->
+    <div class="light" style="top:120px; left:120px; background:red"></div>
+    <div class="light" style="top:160px; left:160px; background:yellow"></div>
+    <div class="light" style="top:200px; left:90px; background:cyan"></div>
+    <div class="light" style="top:240px; left:150px; background:pink"></div>
+     <div class="light" style="top:150px; left:120px; background:red"></div>
+    <div class="light" style="top:220px; left:160px; background:yellow"></div>
+    <div class="light" style="top:250px; left:90px; background:cyan"></div>
+    <div class="light" style="top:300px; left:150px; background:pink"></div>
+
+    <!-- 🎁 Regalos -->
+    <div class="gifts">
+      <div class="gift"></div>
+      <div class="gift "></div>
+      <div class="gift"></div>
+    </div>
+  </div>
+</div>
+
+<!-- 🪟 Modal -->
+
+
+<script>
+function openGift(){
+  document.getElementById("cartaMensaje").style.display="flex";
+}
+function closeGift(){
+  document.getElementById("cartaMensaje").style.display="none";
+}
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const audios = document.getElementById('audios');
+  const boton = document.querySelector('.boton');
+
+  // Reproducir audio al hacer clic en el botón
+  boton.addEventListener('click', () => {
+    audios.play().catch(error => {
+      console.log('Audio bloqueado, pero funciona al hacer clic en el navegador si se solicita');
+    });
+  });
+});
+</script>
+</body>
+</html>
